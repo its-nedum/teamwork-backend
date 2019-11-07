@@ -8,4 +8,6 @@ cache:
     - node_modules
 script:
   - npm test
+after_success:
+  - npm coverage
 
