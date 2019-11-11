@@ -29,6 +29,6 @@ app.use('/api/v1', gifRouter );
 
 //Setup our Auth Router
 const authRouter = require('./routes/auth');
-app.use('/api/v1', authRouter );
+app.use('/api/v1/auth', authRouter );
 
 module.exports = app;
