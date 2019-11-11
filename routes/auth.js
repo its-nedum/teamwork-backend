@@ -10,15 +10,15 @@ const client = require('../database/dbcon');
 //POST a new user
 router.post('/create-user', (req, res) => {
     //NOTE: Perform some checks on the req.body variable before saving
-    const firstName = 'Joshua'; //req.body.firstName
-    const lastName = 'Nedum';
-    const email = 'nedum@gmail.com';
-    const password = 'qwerty';
-    const gender = 'male';
-    const job_role = 'Software Developer';
-    const department = 'IT';
-    const address = 'Apo Abuja Nigeria';
-    const phone_no = '07082632448';
+    const firstName = req.body.firstName
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const password = req.body.password;
+    const gender = req.body.gender;
+    const job_role = req.body.jobRole;
+    const department = req.body.department;
+    const address = req.body.address;
+    const phone_no = req.body.phoneNo;
     const created_at = moment().format("L");
 
     //Check whether email already exist
@@ -62,8 +62,8 @@ router.post('/create-user', (req, res) => {
 
 //SIGN IN user
 router.post('/signin', (req, res) => {
-    const email = 'nedum@gmail.com' ; //req.body.email
-    const password = 'qwerty'; //req.body.password
+    const email = req.body.email
+    const password = req.body.password
 
     //check if email and password is empty
     if(!email || !password){
@@ -81,14 +81,14 @@ router.post('/signin', (req, res) => {
         }
         //If no row was found
         if(!result.rows[0]){
-            return res.status(400).json({message: 'The credentials you provided is incorrect1'})
+            return res.status(400).json({message: 'The credentials you provided is incorrect'})
         }
         //check if the password match the hashed password in database
         let dbpass = result.rows[0].password;
         bcrypt.compare(password, dbpass).then(
             (valid) => {
                 if(valid == false){
-                    return res.status(400).json({message: 'The credentials you provided is incorrect2', pass: password, Dbpass: result.rows[0].password}) 
+                    return res.status(400).json({message: 'The credentials you provided is incorrect'}) 
                 }
 
             const user = {
