@@ -1,8 +1,122 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const moment = require('moment')
 
 //Import our database connection
 const client = require('../database/dbcon');
+
+//POST a new user
+router.post('/create-user', (req, res) => {
+    //NOTE: Perform some checks on the req.body variable before saving
+    const firstName = 'Joshua'; //req.body.firstName
+    const lastName = 'Nedum';
+    const email = 'nedum@gmail.com';
+    const password = 'qwerty';
+    const gender = 'male';
+    const job_role = 'Software Developer';
+    const department = 'IT';
+    const address = 'Apo Abuja Nigeria';
+    const phone_no = '07082632448';
+    const created_at = moment().format("L");
+
+    //Check whether email already exist
+    client.query("SELECT * FROM employees WHERE email = $1", [email], (err, result) => {
+        if(err){
+            console.log(err)
+        }
+        //If user exist send message
+        if(result.rows[0]){
+            return res.status(400).json({message: 'The user already exist'})
+        } else{
+        //If user is new then add user
+            //lets hash our password
+    bcrypt.hash(password, 8).then(
+        (hash) => {
+            const hashPassword = hash;
+            client.query("INSERT INTO employees(first_name,last_name,email,password,gender,job_role,department,address,phone_no,created_at)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", 
+                [firstName,lastName,email,hashPassword,gender,job_role,department,address,phone_no, created_at], (err) => {
+                if(err){
+                    console.log(err)
+                }
+                res.status(201).json({
+                    status: 'success',
+                    data: {
+                        message: 'User account created successfully',  
+                    }
+                })
+            })
+        }
+    ).catch(
+        (error) => {
+            res.status(500).json({
+                error: error
+            });
+        }
+    )
+        }
+    })
+    
+})
+
+//SIGN IN user
+router.post('/signin', (req, res) => {
+    const email = 'nedum@gmail.com' ; //req.body.email
+    const password = 'qwerty'; //req.body.password
+
+    //check if email and password is empty
+    if(!email || !password){
+        return res.status(400).json({message: 'Some values are missing'})
+    }
+    //check email validity
+    const checkedEmail = /\S+@\S+\.\S+/.test(email);
+    if(!checkedEmail){
+        return res.status(400).json({message: 'Please enter a valid email'})
+    }
+    //If email is correct then run query
+    client.query("SELECT * FROM employees WHERE email = $1", [email], (err, result) => {
+        if(err){ 
+            console.log(err)
+        }
+        //If no row was found
+        if(!result.rows[0]){
+            return res.status(400).json({message: 'The credentials you provided is incorrect1'})
+        }
+        //check if the password match the hashed password in database
+        let dbpass = result.rows[0].password;
+        bcrypt.compare(password, dbpass).then(
+            (valid) => {
+                if(valid == false){
+                    return res.status(400).json({message: 'The credentials you provided is incorrect2', pass: password, Dbpass: result.rows[0].password}) 
+                }
+
+            const user = {
+                email,
+                password
+            }
+
+            jwt.sign({user}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
+                
+                res.status(200).json({
+                message: 'success',
+                data: {
+                    token,
+                    userId: result.rows[0].user_id
+                    }
+                })
+            });
+
+        }).catch(
+                (error) => {
+                    res.status(500).json({
+                        error: error
+                    });
+                }
+            );
+    
+        })
+})
 
 
 module.exports = router;
