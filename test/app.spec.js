@@ -4,7 +4,7 @@ const app = require('../app');
 describe("Teamwork Api test", () => {
     //Testing my app.js file
     describe('GET /', () => {
-        it('should return a string', () => {
+        it('should return Welcome to Teamwork DevC Capstone Project API', () => {
             expect('Welcome to Teamwork DevC Capstone Project').to.equal('Welcome to Teamwork DevC Capstone Project')
         })
     })
