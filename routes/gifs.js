@@ -8,27 +8,39 @@ const client = require('../database/dbcon');
 
 //POST a gif to database
 router.post('/gifs', (req, res) => {
-    
-        const title = req.body.title;
-        const imageUrl = req.body.imageUrl;
-        const createdAt = moment().format("L");
-        const user_id = req.user.user_id
-
-    client.query('INSERT INTO gifs(title, image_url, user_id, created_at)VALUES($1, $2, $3, $4)', [title, imageUrl, user_id, createdAt], (err) => {
-            if(err){
-                console.log(err)
-            }
-
-            res.status(200).json({
-                status: 'success',
-                data: {
-                    message: 'Gif image created successfully!',
-                    createdAt: createdAt,
-                    title: title,
-                    imageUrl: imageUrl
+    router.post('/gifs', (req, res) => {
+        //Setup cloudinary
+        const cloudinary = require('cloudinary').v2
+        cloudinary.config({
+            cloud_name: 'its-nedum',
+            api_key: '825559472124879',
+            api_secret: '82POnuX-ln1xyhtEhVd0nWogwAY',
+        })
+        cloudinary.uploader.upload('C:\\Users\\Emesue Chinedu\\Videos\\UCDownloads\\todo.jpg',(err, result) => {
+            const title = req.body.title;
+            const gifId = result.public_id;
+            const imageUrl = result.url;
+            const user_id = req.user.user_id
+            const createdAt = moment().format('L');
+            client.query('INSERT INTO gifs(title, image_url, user_id, created_at)VALUES($1, $2, $3, $4)', [title, imageUrl, user_id, createdAt], (err) => {
+                if(err){
+                    console.log(err)
                 }
+    
+                res.status(200).json({
+                    status: 'Success',
+                    data: {
+                        gifId: gifId,
+                        message: 'Gif image created successfully!',
+                        createdAt: createdAt,
+                        title: title,
+                        imageUrl: imageUrl
+                    }
+                })
             })
         })
+        
+    })
     
 })
 

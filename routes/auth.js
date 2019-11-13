@@ -40,12 +40,21 @@ router.post('/create-user', (req, res) => {
                 if(err){
                     console.log(err)
                 }
-                res.status(201).json({
-                    status: 'success',
+                const user = {
+                    email,
+                    password
+                }
+                jwt.sign({user}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
+                    //NOTE: Need to send token as part of header or to local storage then redirect user to dashboard
+                    res.status(201).json({
+                    message: 'success',
                     data: {
-                        message: 'User account created successfully',  
-                    }
-                })
+                        message: 'User account created successfully',
+                        token,
+                        email
+                        }
+                    })
+                });
             })
         }
     ).catch(

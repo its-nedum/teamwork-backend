@@ -19,16 +19,19 @@ app.get('/', (req, res) => {
   res.send('Welcome to Teamwork DevC Capstone Project');
 });
 
-  //Setup our Article Router
-const articleRouter = require('./routes/articles');
-app.use('/api/v1', articleRouter );
-
-//Setup our Gif Router
-const gifRouter = require('./routes/gifs');
-app.use('/api/v1', gifRouter );
-
 //Setup our Auth Router
 const authRouter = require('./routes/auth');
 app.use('/api/v1/auth', authRouter );
+
+//Route guard with JSONWEBTOKEN
+const authenticate = require('./middleware/authenticate')
+
+//Setup our Article Router
+const articleRouter = require('./routes/articles');
+app.use('/api/v1', authenticate, articleRouter );
+
+//Setup our Gif Router
+const gifRouter = require('./routes/gifs');
+app.use('/api/v1', authenticate, gifRouter );
 
 module.exports = app;
