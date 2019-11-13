@@ -17,26 +17,25 @@ router.post('/gifs', (req, res) => {
             api_secret: '82POnuX-ln1xyhtEhVd0nWogwAY',
         })
         cloudinary.uploader.upload('C:\\Users\\Emesue Chinedu\\Videos\\UCDownloads\\todo.jpg',(err, result) => {
-            const title = req.body.title;
-            const gifId = result.public_id;
-            const imageUrl = result.url;
-            const user_id = req.user.user_id
-            const createdAt = moment().format('L');
-            client.query('INSERT INTO gifs(title, image_url, user_id, created_at)VALUES($1, $2, $3, $4)', [title, imageUrl, user_id, createdAt], (err) => {
-                if(err){
-                    console.log(err)
+        const title = req.body.title;
+        const gifId = result.public_id;
+        const imageUrl = result.url;
+        const user_id = req.user.user_id;
+        const createdAt = moment().format('L');
+        client.query('INSERT INTO gifs(title, image_url, user_id, created_at)VALUES($1, $2, $3, $4)',[title, imageUrl, user_id, createdAt],(err) => {
+            if(err){
+                console.log(err)
+            }
+            res.status(200).json({
+                status: 'Success',
+                data: {
+                    gifId: gifId,
+                    message: 'Gif image created successfully!',
+                    createdAt: createdAt,
+                    title: title,
+                    imageUrl: imageUrl
                 }
-    
-                res.status(200).json({
-                    status: 'Success',
-                    data: {
-                        gifId: gifId,
-                        message: 'Gif image created successfully!',
-                        createdAt: createdAt,
-                        title: title,
-                        imageUrl: imageUrl
-                    }
-                })
+            })
             })
         })
         
@@ -103,8 +102,8 @@ router.get('/gifs/:gifId', (req, res) => {
 
 //Get all GIF
 router.get('/gifs', (req, res) => {
-    client.query("SELECT * FROM gifs", (err, result) => {
-        if(err){
+client.query("SELECT * FROM gifs", (err, result) => {
+    if (err) {
             console.log(err)
         }
         res.status(200).json({
