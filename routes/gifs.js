@@ -8,7 +8,6 @@ const client = require('../database/dbcon');
 
 //POST a gif to database
 router.post('/gifs', (req, res) => {
-    router.post('/gifs', (req, res) => {
         //Setup cloudinary
         const cloudinary = require('cloudinary').v2
         cloudinary.config({
@@ -16,7 +15,7 @@ router.post('/gifs', (req, res) => {
             api_key: '825559472124879',
             api_secret: '82POnuX-ln1xyhtEhVd0nWogwAY',
         })
-        cloudinary.uploader.upload('C:\\Users\\Emesue Chinedu\\Videos\\UCDownloads\\todo.jpg',(err, result) => {
+        cloudinary.uploader.upload('C:\\Users\\Emesue Chinedu\\Videos\\UCDownloads\\todo.jpg', (err, result) => {
         const title = req.body.title;
         const gifId = result.public_id;
         const imageUrl = result.url;
@@ -40,8 +39,7 @@ router.post('/gifs', (req, res) => {
         })
         
     })
-    
-})
+
 
 //POST a comment to a gif using the gif ID
 router.post('/gifs/:gifId/comment', (req, res) => {
