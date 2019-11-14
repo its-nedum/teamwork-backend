@@ -10,14 +10,14 @@ describe('Auth Route Testing', () => {
     describe('a POST request to "/auth/create-user"', () => {
       it('should ensure request is from an admin before creating a user', (done) => {
         const user = {
-          firstName: 'test3',
-          lastName: 'test3',
-          email: 'test3@gmail.com',
-          password: 'Test3@2019',
+          firstName: 'john',
+          lastName: 'doe',
+          email: 'aquaman@gmail.com',
+          password: 'movietinz',
           gender: 'male',
-          jobRole: 'procurement',
+          jobRole: 'developer',
           department: 'sales',
-          address: '5 eleki street, port harcourt'
+          address: 'Abuja, Nigeria'
         };
         chai.request(app)
           .post('/api/v1/auth/create-user')
@@ -40,14 +40,14 @@ describe('Auth Route Testing', () => {
   
     describe('a POST request to "/auth/signin"', () => {
       it('should login a user', (done) => {
-        const userDetails = {
-          email: 'test3@gmail.com',
-          password: 'Test3@2019'
+        const userInfo = {
+          email: 'aquaman@gmail.com',
+          password: 'movietinz'
         };
         chai.request(app)
           .post('/api/v1/auth/signin')
           .set('Accept', 'application/json')
-          .send(userDetails)
+          .send(userInfo)
           .then((res) => {
             expect(res).to.have.status(200);
             expect(res.body.data).to.include({
