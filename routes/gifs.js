@@ -15,7 +15,13 @@ router.post('/gifs', (req, res) => {
             api_key: '825559472124879',
             api_secret: '82POnuX-ln1xyhtEhVd0nWogwAY',
         })
-        cloudinary.uploader.upload('C:\\Users\\Emesue Chinedu\\Videos\\UCDownloads\\todo.jpg', (err, result) => {
+        const file = req.files.gif;
+        if(file.mimetype !== 'image/gif') {
+            return res.status(415).json({
+                message: 'Please upload a GIF file',  
+                })
+          }
+        cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
         const title = req.body.title;
         const gifId = result.public_id;
         const imageUrl = result.url;
