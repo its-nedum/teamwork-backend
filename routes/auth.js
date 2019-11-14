@@ -10,15 +10,25 @@ const client = require('../database/dbcon');
 //POST a new user
 router.post('/create-user', (req, res) => {
     //NOTE: Perform some checks on the req.body variable before saving
-    const firstName = req.body.firstName
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const password = req.body.password;
-    const gender = req.body.gender;
-    const job_role = req.body.jobRole;
-    const department = req.body.department;
-    const address = req.body.address;
-    const phone_no = req.body.phoneNo;
+    // const firstName = req.body.firstName
+    // const lastName = req.body.lastName;
+    // const email = req.body.email;
+    // const password = req.body.password;
+    // const gender = req.body.gender;
+    // const job_role = req.body.jobRole;
+    // const department = req.body.department;
+    // const address = req.body.address;
+    // const phone_no = req.body.phoneNo;
+    // const created_at = moment().format("L");
+    const firstName = 'Joshua'; 
+    const lastName = 'Nedum';
+    const email = 'tacha@gmail.com';
+    const password = 'fishermen';
+    const gender = 'male';
+    const job_role = 'Software Developer';
+    const department = 'IT';
+    const address = 'Apo Abuja Nigeria';
+    const phone_no = '07082632448';
     const created_at = moment().format("L");
 
     //Check whether email already exist
@@ -71,8 +81,10 @@ router.post('/create-user', (req, res) => {
 
 //SIGN IN user
 router.post('/signin', (req, res) => {
-    const email = req.body.email
-    const password = req.body.password
+    // const email = req.body.email
+    // const password = req.body.password
+    const email = 'tacha@gmail.com';
+    const password = 'fishermen';
 
     //check if email and password is empty
     if(!email || !password){

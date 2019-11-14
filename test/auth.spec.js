@@ -6,3 +6,59 @@ const client = require('../database/dbcon')
 
 chai.use(chaiHttp)
 
+describe('Auth Route Testing', () => {
+    describe('a POST request to "/auth/create-user"', () => {
+      it('should ensure request is from an admin before creating a user', (done) => {
+        const user = {
+          firstName: 'test3',
+          lastName: 'test3',
+          email: 'test3@gmail.com',
+          password: 'Test3@2019',
+          gender: 'male',
+          jobRole: 'procurement',
+          department: 'sales',
+          address: '5 eleki street, port harcourt'
+        };
+        chai.request(app)
+          .post('/api/v1/auth/create-user')
+          .set('Accept', 'application/json')
+          .set({ Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidGFjaGFAZ21haWwuY29tIiwicGFzc3dvcmQiOiJmaXNoZXJtZW4ifSwiaWF0IjoxNTczNzM4NzI3LCJleHAiOjE1NzM4MjUxMjd9.6xH-BM7L-hbhcumUItz7wHdPaiaqiOnHQ3lJexT19Lw' })
+          .send(user)
+          .then((res) => {
+            expect(res.status).to.equal(201);
+            expect(res.body.data).to.include({
+              message: 'User account created successfully'
+            });
+            expect(res.body.errors.length).to.be.equal(0);
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+        done();
+      });
+    });
+  
+    describe('a POST request to "/auth/signin"', () => {
+      it('should login a user', (done) => {
+        const userDetails = {
+          email: 'test3@gmail.com',
+          password: 'Test3@2019'
+        };
+        chai.request(app)
+          .post('/api/v1/auth/signin')
+          .set('Accept', 'application/json')
+          .send(userDetails)
+          .then((res) => {
+            expect(res).to.have.status(200);
+            expect(res.body.data).to.include({
+              firstName: 'test3',
+              lastName: 'test3'
+            });
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+        done();
+      });
+    });
+  });

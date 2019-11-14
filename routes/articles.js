@@ -46,7 +46,7 @@ router.post('/articles/:articleId/comment', (req, res) => {
         }
 
         res.status(201).json({
-            status: 'Success',
+            status: 'success',
             data: {
                 message: 'Comment successfully created',
                 comment: comment,
