@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon server.js",
     "test": "nyc --reporter=html --reporter=text mocha",
-    "coverage": "nyc report --reporter=text-lcov | coveralls"
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "heroku-postbuild": "npm install --production"
   },
   "engines": {
     "node": "12.13.0",
