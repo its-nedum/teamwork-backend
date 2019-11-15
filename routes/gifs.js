@@ -11,9 +11,9 @@ router.post('/gifs', (req, res) => {
         //Setup cloudinary
         const cloudinary = require('cloudinary').v2
         cloudinary.config({
-            cloud_name: 'its-nedum',
-            api_key: '825559472124879',
-            api_secret: '82POnuX-ln1xyhtEhVd0nWogwAY',
+            cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            api_secret: process.env.CLOUDINARY_API_SECRET,
         })
         const file = req.files.gif;
         if(file.mimetype !== 'image/gif') {
@@ -115,7 +115,6 @@ client.query("SELECT * FROM gifs", (err, result) => {
             data: result.rows
         });
     })
-    
 });
 
 module.exports = router;
