@@ -50,10 +50,6 @@ describe('Auth Route Testing', () => {
           .send(userInfo)
           .then((res) => {
             expect(res).to.have.status(200);
-            expect(res.body.data).to.include({
-              firstName: 'test3',
-              lastName: 'test3'
-            });
           })
           .catch((err) => {
             console.log(err.message);
