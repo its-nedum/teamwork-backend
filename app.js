@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-//require('dotenv').config();
-require('dotenv-extended').load()
+require('dotenv').config();
+
 const app = express();
 
 //Setup body-parser middleware
