@@ -3,23 +3,37 @@ const router = express.Router()
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const moment = require('moment')
-
+const isAdminCheck = require('../middleware/isAdminCheck')
 //Import our database connection
 const client = require('../database/dbcon');
 
 //POST a new user
-router.post('/create-user', (req, res) => {
+router.post('/create-user', isAdminCheck, (req, res) => {
     //NOTE: Perform some checks on the req.body variable before saving
-    const firstName = req.body.firstName
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const password = req.body.password;
-    const gender = req.body.gender;
-    const job_role = req.body.jobRole;
-    const department = req.body.department;
-    const address = req.body.address;
-    const phone_no = req.body.phoneNo;
+    // const firstName = req.body.firstName
+    // const lastName = req.body.lastName;
+    // const email = req.body.email;
+    // const password = req.body.password;
+    // const gender = req.body.gender;
+    // const job_role = req.body.jobRole;
+    // const department = req.body.department;
+    // const address = req.body.address;
+    // const phone_no = req.body.phoneNo;
+    // const created_at = moment().format("L");
+    // const isAdmin = 'false';
+    const firstName = 'Joshua'; //req.body.firstName
+    const lastName = 'Nedum';
+    const email = 'jest@gmail.com';
+    const password = 'test';
+    const gender = 'male';
+    const job_role = 'Software Developer';
+    const department = 'IT';
+    const address = 'Apo Abuja Nigeria';
+    const phone_no = '07082632448';
     const created_at = moment().format("L");
+    const isAdmin = 'false';
+    
+    
     
 
     //Check whether email already exist
@@ -36,16 +50,13 @@ router.post('/create-user', (req, res) => {
     bcrypt.hash(password, 8).then(
         (hash) => {
             const hashPassword = hash;
-            client.query("INSERT INTO employees(first_name,last_name,email,password,gender,job_role,department,address,phone_no,created_at)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)", 
-                [firstName,lastName,email,hashPassword,gender,job_role,department,address,phone_no, created_at], (err) => {
+            client.query("INSERT INTO employees(first_name,last_name,email,password,gender,job_role,department,address,phone_no,created_at,is_admin)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)", 
+                [firstName,lastName,email,hashPassword,gender,job_role,department,address,phone_no, created_at, isAdmin], (err) => {
                 if(err){
                     console.log(err)
                 }
-                const user = {
-                    email,
-                    password
-                }
-                jwt.sign({user}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
+                
+                jwt.sign({email:email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
                     //NOTE: Need to send token as part of header or to local storage then redirect user to dashboard
                     res.status(201).json({
                     message: 'success',
@@ -101,12 +112,7 @@ router.post('/signin', (req, res) => {
                     return res.status(400).json({message: 'The credentials you provided is incorrect'}) 
                 }
 
-            const user = {
-                email,
-                password
-            }
-
-            jwt.sign({user}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
+            jwt.sign({email: email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
                 
                 res.status(200).json({
                 message: 'success',

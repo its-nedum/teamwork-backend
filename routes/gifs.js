@@ -1,10 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment')
+const fileUpload = require('express-fileupload')
 
 //Import our database connection
 const client = require('../database/dbcon');
 
+//Setup fileupload
+router.use(fileUpload({
+    useTempFiles: true
+}))
 
 //POST a gif to database
 router.post('/gifs', (req, res) => {
