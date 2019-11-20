@@ -5,6 +5,7 @@ require('dotenv').config();
 const app = express();
 
 //Setup body-parser middleware
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
 //CORS - This allows access from different origin to my API
