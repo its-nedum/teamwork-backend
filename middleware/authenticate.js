@@ -13,13 +13,17 @@ const verifyToken = (req, res, next) => {
 
         jwt.verify(req.token, 'RANDOM_TOKEN_SECRET', (err) => {
             if(err){
-                res.sendStatus(403)
+                res.status(403).json({
+                    message: 'Access denied'
+                });
             }else{
                 next();
             }
         })
     } else {
-        res.sendStatus(403);
+        res.status(403).json({
+            message: 'Access denied'
+        });
     }
 };
 

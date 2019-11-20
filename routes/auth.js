@@ -20,8 +20,7 @@ router.post('/create-user', isAdminCheck, (req, res) => {
     const address = req.body.address;
     const phone_no = req.body.phoneNo;
     const created_at = moment().format("L");
-    const isAdmin = 'false';
-    
+    const isAdmin = req.body.isAdmin;
     
     //Check whether email already exist
     client.query("SELECT * FROM employees WHERE email = $1", [email], (err, result) => {
@@ -43,7 +42,7 @@ router.post('/create-user', isAdminCheck, (req, res) => {
                     console.log(err)
                 }
                 
-                jwt.sign({email:email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
+                jwt.sign({email:email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '7d'}, (err, token) => {
                     //NOTE: Need to send token as part of header or to local storage then redirect user to dashboard
                     res.status(201).json({
                     message: 'success',
@@ -99,7 +98,7 @@ router.post('/signin', (req, res) => {
                     return res.status(400).json({message: 'The credentials you provided is incorrect'}) 
                 }
 
-            jwt.sign({email: email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '24h'}, (err, token) => {
+            jwt.sign({email: email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '7d'}, (err, token) => {
                 
                 res.status(200).json({
                 message: 'success',

@@ -37,7 +37,9 @@ const isAdminCheck = (req, res, next) => {
        });
        
     }else {
-        res.sendStatus(403);
+        res.status(403).json({
+            message: 'Access denied'
+        });
     }
          
 };
