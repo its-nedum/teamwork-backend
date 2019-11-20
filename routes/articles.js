@@ -11,7 +11,7 @@ router.post('/articles', (req, res) => {
      const title = req.body.title;
      const article = req.body.article;
      const created_at = moment().format("L");
-     const user_id = req.user.user_id
+     const user_id = req.body.user_id
         
     client.query('INSERT INTO articles(title, article, user_id, created_at) VALUES($1, $2, $3, $4)',
             [title, article, user_id, created_at],(err) => {
@@ -36,7 +36,7 @@ router.post('/articles/:articleId/comment', (req, res) => {
     //Set the comment object
         const comment = req.body.comment;
         const article_id = req.params.articleId; 
-        const user_id = req.user.user_id;
+        const user_id = req.body.user_id;
         const created_at = moment().format("L");
 
     client.query('INSERT INTO article_comments(comment, article_id, user_id, created_at)VALUES($1, $2, $3, $4)',

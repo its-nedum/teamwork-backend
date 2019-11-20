@@ -30,7 +30,7 @@ router.post('/gifs', (req, res) => {
         const title = req.body.title;
         const gifId = result.public_id;
         const imageUrl = result.url;
-        const user_id = req.user.user_id;
+        const user_id = req.body.user_id;
         const createdAt = moment().format('L');
         client.query('INSERT INTO gifs(title, image_url, user_id, created_at)VALUES($1, $2, $3, $4)',[title, imageUrl, user_id, createdAt],(err) => {
             if(err){
@@ -57,7 +57,7 @@ router.post('/gifs/:gifId/comment', (req, res) => {
     
      const comment = req.body.comment;
      const created_at = moment().format("L");
-     const user_id = req.user.user_id
+     const user_id = req.body.user_id
      const gif_id = req.params.gifId
 
      client.query('INSERT INTO gif_comments(comment, gif_id, user_id, created_at)VALUES($1, $2, $3, $4)', [comment, gif_id, user_id, created_at], (err) => {
