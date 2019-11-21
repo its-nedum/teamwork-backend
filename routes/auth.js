@@ -8,7 +8,7 @@ const isAdminCheck = require('../middleware/isAdminCheck')
 const client = require('../database/dbcon');
 
 //POST a new user
-router.post('/create-user', isAdminCheck, (req, res) => {
+router.post('/create-user',  (req, res) => {
     //NOTE: Perform some checks on the req.body variable before saving
     const firstName = req.body.firstName
     const lastName = req.body.lastName;
