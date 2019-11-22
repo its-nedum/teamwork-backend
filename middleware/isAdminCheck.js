@@ -12,7 +12,7 @@ const isAdminCheck = (req, res, next) => {
         //Set the token
         req.token = bearerToken
         
-       jwt.verify(req.token, 'RANDOM_TOKEN_SECRET', (err, decode) => {
+       jwt.verify(req.token, process.env.SECRET_TOKEN, (err, decode) => {
            if(err){console.log(err)}
            
            client.query("SELECT is_admin from employees WHERE email = $1",[decode.email],(err, result) => {

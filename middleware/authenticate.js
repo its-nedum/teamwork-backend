@@ -11,7 +11,7 @@ const verifyToken = (req, res, next) => {
         //Set the token
         req.token = bearerToken
 
-        jwt.verify(req.token, 'RANDOM_TOKEN_SECRET', (err) => {
+        jwt.verify(req.token, process.env.SECRET_TOKEN, (err) => {
             if(err){
                 res.status(403).json({
                     message: 'Access denied'

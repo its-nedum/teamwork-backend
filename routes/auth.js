@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const moment = require('moment')
 const isAdminCheck = require('../middleware/isAdminCheck')
+
 //Import our database connection
 const client = require('../database/dbcon');
 
@@ -42,7 +43,7 @@ router.post('/create-user', isAdminCheck, (req, res) => {
                     console.log(err)
                 }
                 
-                jwt.sign({email:email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '7d'}, (err, token) => {
+                jwt.sign({email:email}, process.env.SECRET_TOKEN, {expiresIn: '7d'}, (err, token) => {
                     //NOTE: Need to send token as part of header or to local storage then redirect user to dashboard
                     res.status(201).json({
                     message: 'success',
@@ -98,7 +99,7 @@ router.post('/signin', (req, res) => {
                     return res.status(400).json({message: 'The credentials you provided is incorrect'}) 
                 }
 
-            jwt.sign({email: email}, 'RANDOM_TOKEN_SECRET', {expiresIn: '7d'}, (err, token) => {
+            jwt.sign({email: email}, process.env.SECRET_TOKEN, {expiresIn: '7d'}, (err, token) => {
                 
                 res.status(200).json({
                 message: 'success',

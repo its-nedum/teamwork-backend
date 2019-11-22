@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const moment = require('moment')
 const fileUpload = require('express-fileupload')
+const getUserId = require('../middleware/helpers')
 
 //Import our database connection
 const client = require('../database/dbcon');
@@ -12,7 +13,7 @@ router.use(fileUpload({
 }))
 
 //POST a gif to database
-router.post('/gifs', (req, res) => {
+router.post('/gifs', async (req, res) => {
         //Setup cloudinary
         const cloudinary = require('cloudinary').v2
         cloudinary.config({
@@ -26,13 +27,13 @@ router.post('/gifs', (req, res) => {
                 message: 'Please upload a GIF file',  
                 })
           }
-        cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
+       cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         const title = req.body.title;
         const gifId = result.public_id;
         const imageUrl = result.url;
-        const user_id = req.body.user_id;
+        const user_id = await getUserId(req)
         const createdAt = moment().format('L');
-        client.query('INSERT INTO gifs(title, image_url, user_id, created_at)VALUES($1, $2, $3, $4)',[title, imageUrl, user_id, createdAt],(err) => {
+        await client.query('INSERT INTO gifs(title, image_url, created_at, user_id)VALUES($1, $2, $3, $4)',[title, imageUrl, createdAt, user_id],(err) => {
             if(err){
                 console.log(err)
             }
@@ -43,7 +44,8 @@ router.post('/gifs', (req, res) => {
                     message: 'Gif image created successfully!',
                     createdAt: createdAt,
                     title: title,
-                    imageUrl: imageUrl
+                    imageUrl: imageUrl,
+                    userId: user_id,
                 }
             })
             })
@@ -53,14 +55,14 @@ router.post('/gifs', (req, res) => {
 
 
 //POST a comment to a gif using the gif ID
-router.post('/gifs/:gifId/comment', (req, res) => {
+router.post('/gifs/:gifId/comment', async (req, res) => {
     
      const comment = req.body.comment;
      const created_at = moment().format("L");
-     const user_id = req.body.user_id
+     const user_id = await getUserId(req)
      const gif_id = req.params.gifId
 
-     client.query('INSERT INTO gif_comments(comment, gif_id, user_id, created_at)VALUES($1, $2, $3, $4)', [comment, gif_id, user_id, created_at], (err) => {
+    await client.query('INSERT INTO gif_comments(comment, gif_id, created_at, user_id)VALUES($1, $2, $3, $4)', [comment, gif_id, created_at, user_id], (err) => {
          if(err){
              console.log(err)
          }
@@ -72,6 +74,7 @@ router.post('/gifs/:gifId/comment', (req, res) => {
             message: 'Comment successfully created',
             comment: comment,
             createdAt: created_at,
+            userId: user_id,
             }
         })
      })

@@ -1,20 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment')
-
+const getUserId = require('../middleware/helpers')
 //Import our database connection
 const client = require('../database/dbcon');
 
 
 //POST an article to the database
-router.post('/articles', (req, res) => {
+router.post('/articles', async (req, res) => {
+
      const title = req.body.title;
      const article = req.body.article;
      const created_at = moment().format("L");
-     const user_id = req.body.user_id
-        
-    client.query('INSERT INTO articles(title, article, user_id, created_at) VALUES($1, $2, $3, $4)',
-            [title, article, user_id, created_at],(err) => {
+     const user_id = await getUserId(req)
+    
+   await client.query('INSERT INTO articles(title, article, created_at,user_id) VALUES($1, $2, $3, $4)',
+            [title, article, created_at, user_id],(err) => {
         if(err){
             console.log(err)
         }
@@ -24,23 +25,23 @@ router.post('/articles', (req, res) => {
                 title: title,
                 article: article,
                 createdAt: created_at,
+                userId: user_id,
               }
         })
         
     })
-      
 });
 
 //POST a comment on an article
-router.post('/articles/:articleId/comment', (req, res) => {
+router.post('/articles/:articleId/comment', async (req, res) => {
     //Set the comment object
         const comment = req.body.comment;
         const article_id = req.params.articleId; 
-        const user_id = req.body.user_id;
+        const user_id = await getUserId(req)
         const created_at = moment().format("L");
 
-    client.query('INSERT INTO article_comments(comment, article_id, user_id, created_at)VALUES($1, $2, $3, $4)',
-            [comment, article_id, user_id, created_at],(err) => {
+    await client.query('INSERT INTO article_comments(comment, article_id, created_at, user_id)VALUES($1, $2, $3, $4)',
+            [comment, article_id, created_at, user_id],(err) => {
         if(err){
             console.log(err)
         }
@@ -50,7 +51,8 @@ router.post('/articles/:articleId/comment', (req, res) => {
             data: {
                 message: 'Comment successfully created',
                 comment: comment,
-                createdAt: created_at
+                createdAt: created_at,
+                userId: user_id,
             }
         })
 
