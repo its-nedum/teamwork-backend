@@ -62,7 +62,7 @@ npm test
 
 ## API
 
-API will be deployed on heroku very soon
+View API on Heroku [here](https://its-nedum-teamwork-api.herokuapp.com/)
 
 ### API Routes
 
