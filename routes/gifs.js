@@ -33,7 +33,7 @@ router.post('/gifs', async (req, res) => {
         const imageUrl = result.url;
         const user_id = await getUserId(req)
         const createdAt = moment().format('L');
-        await client.query('INSERT INTO gifs(title, image_url, created_at, user_id)VALUES($1, $2, $3, $4)',[title, imageUrl, createdAt, user_id],(err) => {
+        await client.query('INSERT INTO gifs(title, image_url, user_id, created_at)VALUES($1, $2, $3, current_timestamp)',[title, imageUrl, user_id],(err) => {
             if(err){
                 console.log(err)
             }
@@ -62,7 +62,7 @@ router.post('/gifs/:gifId/comment', async (req, res) => {
      const user_id = await getUserId(req)
      const gif_id = req.params.gifId
 
-    await client.query('INSERT INTO gif_comments(comment, gif_id, created_at, user_id)VALUES($1, $2, $3, $4)', [comment, gif_id, created_at, user_id], (err) => {
+    await client.query('INSERT INTO gif_comments(comment, gif_id, user_id, created_at)VALUES($1, $2, $3, current_timestamp)', [comment, gif_id, user_id], (err) => {
          if(err){
              console.log(err)
          }
@@ -112,7 +112,7 @@ router.get('/gifs/:gifId', (req, res) => {
     })
 })
 
-//Get all GIF
+// //Get all GIF
 router.get('/gifs', (req, res) => {
 client.query("SELECT * FROM gifs", (err, result) => {
     if (err) {

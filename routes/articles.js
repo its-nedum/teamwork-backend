@@ -14,8 +14,8 @@ router.post('/articles', async (req, res) => {
      const created_at = moment().format("L");
      const user_id = await getUserId(req)
     
-   await client.query('INSERT INTO articles(title, article, created_at,user_id) VALUES($1, $2, $3, $4)',
-            [title, article, created_at, user_id],(err) => {
+   await client.query('INSERT INTO articles(title, article, user_id, created_at) VALUES($1, $2, $3, current_timestamp)',
+            [title, article, user_id],(err) => {
         if(err){
             console.log(err)
         }
@@ -40,8 +40,8 @@ router.post('/articles/:articleId/comment', async (req, res) => {
         const user_id = await getUserId(req)
         const created_at = moment().format("L");
 
-    await client.query('INSERT INTO article_comments(comment, article_id, created_at, user_id)VALUES($1, $2, $3, $4)',
-            [comment, article_id, created_at, user_id],(err) => {
+    await client.query('INSERT INTO article_comments(comment, article_id, user_id, created_at)VALUES($1, $2, $3, current_timestamp)',
+            [comment, article_id, user_id],(err) => {
         if(err){
             console.log(err)
         }
@@ -83,7 +83,7 @@ router.patch('/articles/:articleId', (req, res) => {
        const createdAt = moment().format("L");
     
     //Update the database with the details where the articleId match parameter ID
-    client.query('UPDATE articles SET title = $1, article = $2, created_at = $3 WHERE article_id = $4',
+    client.query('UPDATE articles SET title = $1, article = $2, created_at = current_timestamp WHERE article_id = $4',
         [title, article, createdAt, articleId], (err) => {
             if(err) {
                 console.log(err)
@@ -119,15 +119,29 @@ router.delete('/articles/:articleId', (req, res) => {
 })
 
 //GET all the articles and gif 
-router.get('/feed', (req, res) => {
-    client.query('SELECT * FROM articles', (err, result) => {
+router.get('/feed', async (req, res) => {
+   let allFeeds,
+        articlesArray = [],
+        gifsArray = [];
+    //Query articles
+   await client.query('SELECT * FROM articles', async (err, articles) => {
         if(err){
             console.log(err)
         }
-        res.status(200).json({
+        
+        //Query gifs
+        await client.query('SELECT * FROM gifs', (error, gifs) => {
+           if(err){console.log(error)} 
+          
+            allFeeds = articles.rows.concat(gifs.rows)
+            
+            allFeeds.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+
+           res.status(200).json({
             status: 'success',
-            data: result.rows
-        })   
+            data: allFeeds,
+        })
+        })    
     })
 });
 

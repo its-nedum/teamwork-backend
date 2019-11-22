@@ -37,8 +37,8 @@ router.post('/create-user', isAdminCheck, (req, res) => {
     bcrypt.hash(password, 8).then(
         (hash) => {
             const hashPassword = hash;
-            client.query("INSERT INTO employees(first_name,last_name,email,password,gender,job_role,department,address,phone_no,created_at,is_admin)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)", 
-                [firstName,lastName,email,hashPassword,gender,job_role,department,address,phone_no, created_at, isAdmin], (err) => {
+            client.query("INSERT INTO employees(first_name,last_name,email,password,gender,job_role,department,address,phone_no,is_admin,created_at)VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,current_timestamp)", 
+                [firstName,lastName,email,hashPassword,gender,job_role,department,address,phone_no,isAdmin], (err) => {
                 if(err){
                     console.log(err)
                 }
