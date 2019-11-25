@@ -121,7 +121,7 @@ router.delete('/articles/:articleId', (req, res) => {
 //GET all the articles and gif 
 router.get('/feed', async (req, res) => {
    let allFeeds;
-   console.log(req)   
+      
     //Query articles
    await client.query('SELECT * FROM articles', async (err, articles) => {
         if(err){
