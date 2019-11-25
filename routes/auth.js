@@ -45,6 +45,7 @@ router.post('/create-user', isAdminCheck, (req, res) => {
                 
                 jwt.sign({email:email}, process.env.SECRET_TOKEN, {expiresIn: '7d'}, (err, token) => {
                     //NOTE: Need to send token as part of header or to local storage then redirect user to dashboard
+                    localStorage.setItem('teamworkAuthTK', token)
                     res.status(201).json({
                     message: 'success',
                     data: {
@@ -100,7 +101,7 @@ router.post('/signin', (req, res) => {
                 }
 
             jwt.sign({email: email}, process.env.SECRET_TOKEN, {expiresIn: '7d'}, (err, token) => {
-                
+                localStorage.setItem('teamworkAuthTK', token)
                 res.status(200).json({
                 message: 'success',
                 data: {
