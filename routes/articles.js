@@ -61,16 +61,30 @@ router.post('/articles/:articleId/comment', async (req, res) => {
 })
 
 //GET a single article (and all associated comments) by ID
-router.get('/articles/:articleId', (req, res) => {
+router.get('/articles/:articleId', async (req, res) => {
+    const user_id = await getUserId(req)
     //Query our database and return the required article using article ID
-    client.query("SELECT * FROM articles WHERE article_id = $1", [req.params.articleId], (err, result) => {
+   await client.query("SELECT * FROM articles WHERE id = $1", [req.params.articleId], async (err, article) => {
         if(err){
             console.log(err)
         }
-        res.status(200).json({
-         status: 'success',
-         data: result.rows
-         })  
+        await client.query("SELECT * FROM article_comments WHERE user_id = $1", [user_id], (error, comments) => {
+            if(error){
+                console.log(err)
+            }
+            console.log(article)
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    id: article.rows[0].id,
+                    created_at: article.rows[0].created_at,
+                    title: article.rows[0].title,
+                    article: article.rows[0].article,
+                    comments: comments.rows
+                }
+                }) 
+        })
+         
     })
 }) 
 

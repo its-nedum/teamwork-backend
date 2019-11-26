@@ -99,15 +99,28 @@ router.delete('/gifs/:gifId', (req, res) => {
 })
 
 //GET a single gif
-router.get('/gifs/:gifId', (req, res) => {
+router.get('/gifs/:gifId', async (req, res) => {
+    const user_id = await getUserId(req)
     //Query our database and return the required gif using gif ID
-    client.query("SELECT * FROM gifs WHERE gif_id = $1", [req.params.gifId], (err, result) => {
+   await client.query("SELECT * FROM gifs WHERE id = $1", [req.params.gifId], async (err, gif) => {
         if(err){
             console.log(err)
         }
-        res.status(200).json({
-            status: 'success',
-            data: result.rows
+        
+        await client.query("SELECT * FROM gif_COMMENTS WHERE user_id = $1", [user_id], (error, comments) => {
+            if(error){
+                console.log(err)
+            }  
+            res.status(200).json({
+                status: 'success',
+                    data: {
+                        id: gif.rows[0].id,
+                        created_at: gif.rows[0].created_at,
+                        title: gif.rows[0].title,
+                        image_url: gif.rows[0].image_url,
+                        comments: comments.rows
+                    }
+            })
         })
     })
 })
