@@ -83,7 +83,7 @@ router.post('/gifs/:gifId/comment', async (req, res) => {
 //DELETE a gif using the gif ID
 router.delete('/gifs/:gifId', (req, res) => {
     //This removes the gif from the gif database 
-    client.query("DELETE FROM gifs WHERE gif_id = $1", [req.params.gifId], (err) => {
+    client.query("DELETE FROM gifs WHERE id = $1", [req.params.gifId], (err) => {
         if(err){
             console.log(err)
         }

@@ -97,7 +97,7 @@ router.patch('/articles/:articleId', (req, res) => {
        const createdAt = moment().format("L");
     
     //Update the database with the details where the articleId match parameter ID
-    client.query('UPDATE articles SET title = $1, article = $2, created_at = current_timestamp WHERE article_id = $4',
+    client.query('UPDATE articles SET title = $1, article = $2, created_at = current_timestamp WHERE id = $4',
         [title, article, createdAt, articleId], (err) => {
             if(err) {
                 console.log(err)
@@ -119,7 +119,7 @@ router.patch('/articles/:articleId', (req, res) => {
 //DELETE an article using the article ID
 router.delete('/articles/:articleId', (req, res) => {
     //This removes the article from the article database 
-    client.query('DELETE FROM articles WHERE article_id = $1', [req.params.articleId], (err) => {
+    client.query('DELETE FROM articles WHERE id = $1', [req.params.articleId], (err) => {
         if(err){
             console.log(err)
         }
