@@ -98,7 +98,7 @@ router.patch('/articles/:articleId', (req, res) => {
     
     //Update the database with the details where the articleId match parameter ID
     client.query('UPDATE articles SET title = $1, article = $2, created_at = current_timestamp WHERE id = $4',
-        [title, article, createdAt, articleId], (err) => {
+        [title, article, articleId], (err) => {
             if(err) {
                 console.log(err)
             }
