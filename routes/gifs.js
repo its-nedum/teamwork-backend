@@ -107,7 +107,7 @@ router.get('/gifs/:gifId', async (req, res) => {
             console.log(err)
         }
         
-        await client.query("SELECT * FROM gif_COMMENTS WHERE user_id = $1", [user_id], (error, comments) => {
+        await client.query("SELECT * FROM gif_COMMENTS WHERE gif_id = $1", [gif.rows[0].id], (error, comments) => {
             if(error){
                 console.log(err)
             }  

@@ -68,7 +68,7 @@ router.get('/articles/:articleId', async (req, res) => {
         if(err){
             console.log(err)
         }
-        await client.query("SELECT * FROM article_comments WHERE user_id = $1", [user_id], (error, comments) => {
+        await client.query("SELECT * FROM article_comments WHERE article_id = $1", [article.rows[0].id], (error, comments) => {
             if(error){
                 console.log(err)
             }
