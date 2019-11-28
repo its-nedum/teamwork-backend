@@ -9,7 +9,10 @@ const client = require('../database/dbcon');
 
 //Setup fileupload
 router.use(fileUpload({
-    useTempFiles: true
+    useTempFiles: true,
+    createParentPath: true,
+    safeFileNames: true,
+    preserveExtension: true
 }))
 
 //POST a gif to database
@@ -21,12 +24,12 @@ router.post('/gifs', async (req, res) => {
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET,
         })
-        const file = req.body.gif;
-        // if(file.mimetype !== 'image/gif') {
-        //     return res.status(415).json({
-        //         message: 'Please upload a GIF file',  
-        //         })
-        //   }
+        const file = req.files.gif;
+        if(file.mimetype !== 'image/gif') {
+            return res.status(415).json({
+                message: 'Please upload a GIF file',  
+                })
+          }
        cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         const title = req.body.title;
         const gifId = result.public_id;
