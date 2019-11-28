@@ -8,12 +8,9 @@ const getUserId = require('../middleware/helpers')
 const client = require('../database/dbcon');
 
 //Setup fileupload
-router.use(fileUpload({
-    useTempFiles: true,
-    createParentPath: true,
-    safeFileNames: true,
-    preserveExtension: true
-}))
+// router.use(fileUpload({
+//     useTempFiles: true
+// }))
 
 //POST a gif to database
 router.post('/gifs', async (req, res) => {

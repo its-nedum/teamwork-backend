@@ -8,6 +8,9 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(bodyParser.json());
 
+app.use(fileUpload({
+  useTempFiles: true
+}))
 //CORS - This allows access from different origin to my API
 app.use(cors({
   origin: '*',
