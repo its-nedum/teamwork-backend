@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const moment = require('moment')
-const fileUpload = require('express-fileupload')
+// const fileUpload = require('express-fileupload')
 const getUserId = require('../middleware/helpers')
 
 //Import our database connection
