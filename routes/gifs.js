@@ -22,11 +22,11 @@ router.post('/gifs', async (req, res) => {
             api_secret: process.env.CLOUDINARY_API_SECRET,
         })
         const file = req.body.gif;
-        if(file.mimetype !== 'image/gif') {
-            return res.status(415).json({
-                message: 'Please upload a GIF file',  
-                })
-          }
+        // if(file.mimetype !== 'image/gif') {
+        //     return res.status(415).json({
+        //         message: 'Please upload a GIF file',  
+        //         })
+        //   }
        cloudinary.uploader.upload(file.tempFilePath, async (err, result) => {
         const title = req.body.title;
         const gifId = result.public_id;
