@@ -21,7 +21,7 @@ router.post('/gifs', async (req, res) => {
             api_key: process.env.CLOUDINARY_API_KEY,
             api_secret: process.env.CLOUDINARY_API_SECRET,
         })
-        const file = req.files.gif;
+        const file = req.body.gif;
         if(file.mimetype !== 'image/gif') {
             return res.status(415).json({
                 message: 'Please upload a GIF file',  
